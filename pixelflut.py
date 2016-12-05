@@ -14,14 +14,14 @@ class Pixelflut:
         self.canvas = tkinter.Canvas(fenster, background="white")
         self.canvas.pack(fill=tkinter.BOTH, expand=1)
 
-        self.init_canvas()
+        self.__init_canvas()
 
-        th = threading.Thread(target=self.run_pixel_server)
+        th = threading.Thread(target=self.__run_pixel_server)
         th.start()
 
         fenster.mainloop()
 
-    def run_pixel_server(self):
+    def __run_pixel_server(self):
         server = PixelServer(self, self.ip, self.port)
         server.start()
 
@@ -31,10 +31,11 @@ class Pixelflut:
                 self.canvas.winfo_height())
 
     def draw_pixel(self, x, y):
+        """Draw a black pixel at (x|y)."""
         # TODO Support for colors
         self.canvas.create_rectangle(x, y, x+1, y+1, fill="black")
 
-    def init_canvas(self):
+    def __init_canvas(self):
         t = "Pixelflutserver"
         t += "@" + self.ip + ":" + str(self.port)
         self.canvas.create_text(0, 0, anchor="nw", text=t)
@@ -48,11 +49,13 @@ class PixelServer:
         self.pixelflut = pixelflut
 
     def start(self):
+        """Start server. This method does not return."""
         while True:
             sock, address = self.server.accept()
-            self.handle(sock)
+            # TODO only call handle if window is visible - call for window state
+            self.__handle(sock)
 
-    def handle(self, client_sock):
+    def __handle(self, client_sock):
         bytes_request = client_sock.recv(1024)
         command = str(bytes_request, "utf-8")
         print("Command:", command)
