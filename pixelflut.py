@@ -28,6 +28,7 @@ class Pixelflut:
     def get_canvas_size(self):
         """Return size of the current canvas in form of (width, height)."""
         # TODO does not change when window size changes
+        # Probieren mit self.canvas.winfo_width()
         return (self.canvas.cget("width"),
                 self.canvas.cget("height"))
 
@@ -56,7 +57,7 @@ class PixelServer:
     def handle(self, client_sock):
         bytes_request = client_sock.recv(1024)
         command = str(bytes_request, "utf-8")
-        print("Command", command)
+        print("Command:", command)
         if command.lower().startswith("px"):
             try:
                 px, x, y = command.split(' ')
@@ -87,7 +88,7 @@ if __name__ == "__main__":
                         dest="ip", default="127.0.0.1")
     parser.add_argument("-p", "--port",
                         help="The port number to listen to.", type=int,
-                        dest="port", default=12345)
+                        dest="port", default=1234)
     args = parser.parse_args()
 
     Pixelflut(ip=args.ip, port=args.port)
