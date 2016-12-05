@@ -27,10 +27,8 @@ class Pixelflut:
 
     def get_canvas_size(self):
         """Return size of the current canvas in form of (width, height)."""
-        # TODO does not change when window size changes
-        # Probieren mit self.canvas.winfo_width()
-        return (self.canvas.cget("width"),
-                self.canvas.cget("height"))
+        return (self.canvas.winfo_width(),
+                self.canvas.winfo_height())
 
     def draw_pixel(self, x, y):
         # TODO Support for colors
@@ -67,7 +65,7 @@ class PixelServer:
 
         elif command.lower() == "size":
             w, h = self.pixelflut.get_canvas_size()
-            client_sock.send(bytes(w + "x" + h, "utf-8"))
+            client_sock.send(bytes(str(w) + "x" + str(h), "utf-8"))
 
         client_sock.close()
 
