@@ -6,6 +6,7 @@ import threading
 class Pixelflut:
     def __init__(self, ip="127.0.0.1", port=1234):
         fenster = tkinter.Tk()
+        # TODO add event to kill server thread when closing window
 
         self.ip = ip
         self.port = port
@@ -71,4 +72,14 @@ class PixelServer:
 
 
 if __name__ == "__main__":
-    Pixelflut()
+    import argparse
+    parser = argparse.ArgumentParser(description="Pixelflut")
+    parser.add_argument("--ip",
+                        help="IP address the server should be bound to.",
+                        dest="ip", default="127.0.0.1")
+    parser.add_argument("--port",
+                        help="port number to listen to", type=int,
+                        dest="port", default=12345)
+    args = parser.parse_args()
+
+    Pixelflut(ip=args.ip, port=args.port)
