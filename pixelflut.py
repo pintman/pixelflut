@@ -44,6 +44,7 @@ class Pixelflut:
         self.coord2rectangle[(x,y)] = r
 
     def clear_pixel(self, x, y):
+        """Remove the pixel at (x|y) from the screen."""
         if (x, y) in self.coord2rectangle:
             self.canvas.delete(self.coord2rectangle[(x, y)])
             del(self.coord2rectangle[(x, y)])
@@ -64,7 +65,7 @@ class PixelServer:
     def start(self):
         """Start server. This method does not return."""
         while True:
-            sock, address = self.server.accept()
+            sock, _address = self.server.accept()
             # TODO only call handle if window is visible - call for window state
             self.__handle(sock)
 
@@ -74,7 +75,7 @@ class PixelServer:
         print("Command:", command)
         if command.lower().startswith("px"):
             try:
-                px, x, y, on_off = command.split(' ')
+                _px, x, y, on_off = command.split(' ')
                 if on_off == "1":
                     self.pixelflut.draw_pixel(int(x), int(y))
                 elif on_off == "0":
