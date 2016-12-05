@@ -16,6 +16,7 @@ class Pixelflut:
 
         self.ip = ip
         self.port = port
+        self.coord2rectangle = dict()
 
         self.canvas = tkinter.Canvas(fenster, background="white")
         self.canvas.pack(fill=tkinter.BOTH, expand=1)
@@ -39,7 +40,13 @@ class Pixelflut:
     def draw_pixel(self, x, y):
         """Draw a black pixel at (x|y)."""
         # TODO Support for colors
-        self.canvas.create_rectangle(x, y, x+1, y+1, fill="black")
+        r = self.canvas.create_rectangle(x, y, x+1, y+1, fill="black")
+        self.coord2rectangle[(x,y)] = r
+
+    def clear_pixel(self, x, y):
+        if (x, y) in self.coord2rectangle:
+            self.canvas.delete(self.coord2rectangle[(x, y)])
+            del(self.coord2rectangle[(x, y)])
 
     def __init_canvas(self):
         t = "Pixelflutserver"
@@ -67,8 +74,11 @@ class PixelServer:
         print("Command:", command)
         if command.lower().startswith("px"):
             try:
-                px, x, y = command.split(' ')
-                self.pixelflut.draw_pixel(int(x), int(y))
+                px, x, y, on_off = command.split(' ')
+                if on_off == "1":
+                    self.pixelflut.draw_pixel(int(x), int(y))
+                elif on_off == "0":
+                    self.pixelflut.clear_pixel(int(x), int(y))
             except Exception as e:
                 print("Command Error", command, e)
 
@@ -83,9 +93,11 @@ if __name__ == "__main__":
     import argparse
     d = """
         Pixelflut - A Server, that listens for TCP packets that allow for
-        drawing on the screen. Valid content of the packets is \"PX x y\"
+        drawing on the screen. Valid content of the packets is \"PX x y on_off\"
         where x and
-        y are coordinates on the screen. A pixel will be drawn there. When
+        y are coordinates on the screen and on_off is either 1 or 0.
+        A pixel will be drawn there if on_off is 1 - otherwise it will be
+        cleared. When
         the packet contains \"SIZE\" you will receive the size of the screen
         in the format WIDTHxHEIGHT.
         """
