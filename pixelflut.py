@@ -26,6 +26,7 @@ class Pixelflut:
 
     def get_canvas_size(self):
         """Return size of the current canvas in form of (width, height)."""
+        # TODO does not change when window size changes
         return (self.canvas.cget("width"),
                 self.canvas.cget("height"))
 
@@ -36,14 +37,14 @@ class Pixelflut:
     def init_canvas(self):
         t = "Pixelflutserver"
         t += "@" + self.ip + ":" + str(self.port)
-        self.canvas.create_text(0,0, anchor="nw", text=t)
+        self.canvas.create_text(0, 0, anchor="nw", text=t)
 
 
 class PixelServer:
     def __init__(self, pixelflut, ip="127.0.0.1", port=1234):
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind((ip, port))
-        self.client_sock = self.server.listen(10)
+        self.client_sock = self.server.listen(100)
         self.pixelflut = pixelflut
 
     def start(self):
