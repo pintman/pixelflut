@@ -1,3 +1,9 @@
+"""
+Pixelflut is a TCP server screen inspired by the pixelflut project of the CCC
+Göttingen (https://cccgoe.de/wiki/Pixelflut). It uses the core python
+libraries and will not rely on other libraries.
+"""
+
 import tkinter
 import socket
 import threading
