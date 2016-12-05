@@ -73,12 +73,20 @@ class PixelServer:
 
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description="Pixelflut")
-    parser.add_argument("--ip",
-                        help="IP address the server should be bound to.",
+    d = """
+        Pixelflut - A Server, that listens for TCP packets that allow for
+        drawing on the screen. Valid content of the packets is \"PX x y\"
+        where x and
+        y are coordinates on the screen. A pixel will be drawn there. When
+        the packet contains \"SIZE\" you will receive the size of the screen
+        in the format WIDTHxHEIGHT.
+        """
+    parser = argparse.ArgumentParser(description=d)
+    parser.add_argument("-i", "--ip",
+                        help="An IP address the server should be bound to.",
                         dest="ip", default="127.0.0.1")
-    parser.add_argument("--port",
-                        help="port number to listen to", type=int,
+    parser.add_argument("-p", "--port",
+                        help="The port number to listen to.", type=int,
                         dest="port", default=12345)
     args = parser.parse_args()
 
