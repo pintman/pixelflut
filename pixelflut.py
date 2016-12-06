@@ -52,7 +52,7 @@ class Pixelflut:
     def __init_canvas(self):
         t = "Pixelflutserver"
         t += "@" + self.ip + ":" + str(self.port)
-        self.canvas.create_text(0, 0, anchor="nw", text=t)
+        self.canvas.create_text(10, 0, anchor="nw", text=t)
 
 
 class PixelServer:
@@ -90,6 +90,20 @@ class PixelServer:
         client_sock.close()
 
 
+class PixelClient:
+    def __init__(self, ip="127.0.0.1", port=1234):
+        self.ip = ip
+        self.port = port
+
+    def px(self, x, y, on_off):
+        self. client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client.connect((self.ip, self.port))
+        cmd = "PX {x} {y} {on_off}".format(x=x, y=y, on_off=on_off)
+        cmd = bytes(cmd, "utf-8")
+        self.client.send(cmd)
+        self.client.close()
+
+
 if __name__ == "__main__":
     import argparse
     d = """
@@ -100,15 +114,30 @@ if __name__ == "__main__":
         A pixel will be drawn there if on_off is 1 - otherwise it will be
         cleared. When
         the packet contains \"SIZE\" you will receive the size of the screen
-        in the format WIDTHxHEIGHT.
+        in the format WIDTHxHEIGHT. There is a simple client that can be used as well.
         """
     parser = argparse.ArgumentParser(description=d)
+    parser.add_argument("-s", "--server", action="store_const", const=True,
+                        help="Start server.")
+    parser.add_argument("-c", "--client", action="store_const", const=True,
+                        help="Start client.")
     parser.add_argument("-i", "--ip",
-                        help="An IP address the server should be bound to.",
+                        help="An IP address the client or server should be bound to.",
                         dest="ip", default="127.0.0.1")
     parser.add_argument("-p", "--port",
-                        help="The port number to listen to.", type=int,
+                        help="The port number to listen or to connect to.", type=int,
                         dest="port", default=1234)
     args = parser.parse_args()
+    if args.client:
+        print("Connecting to {ip}:{po}.".format(ip=args.ip, po=args.port))
+        user_input = ""
+        cl = PixelClient(ip=args.ip, port=args.port)
+        while user_input != "n":
+            x = int(input("x="))
+            y = int(input("y="))
+            on_off = int(input("on_off (1,0)="))
+            cl.px(x, y, on_off)
+            user_input = input("Again? (y/n)")
 
-    Pixelflut(ip=args.ip, port=args.port)
+    elif args.server:
+        Pixelflut(ip=args.ip, port=args.port)
