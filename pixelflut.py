@@ -1,7 +1,14 @@
-"""
-Pixelflut is a TCP server screen inspired by the pixelflut project of the CCC
+"""Pixelflut is a TCP server screen inspired by the pixelflut project of the CCC
 Göttingen (https://cccgoe.de/wiki/Pixelflut). It uses the core python
 libraries and will not rely on other libraries.
+
+There is a server and a client component in this package. The server listens for packages
+with commands as content. The following commands are recognized:
+
+SIZE - will respond with the actual size of the screen in the format WIDTHxHEIGHT
+
+PX x y on_off - will draw (on_off=1) or clear (on_off=0) the pixel at (x|y).
+
 """
 
 import tkinter
@@ -10,6 +17,10 @@ import threading
 
 
 class Pixelflut:
+    """A canvas that shows the screen which can be used by clients to print or clear 
+    pixels on.
+    """
+
     def __init__(self, ip="127.0.0.1", port=1234):
         fenster = tkinter.Tk()
         # TODO add event to kill server thread when closing window
@@ -96,6 +107,9 @@ class PixelClient:
         self.port = port
 
     def px(self, x, y, on_off):
+        """Send the PX-Command to the server. This will draw or clear the 
+        pixel at (x|y)."""
+
         cmd = "PX {x} {y} {on_off}".format(x=x, y=y, on_off=on_off)
         cmd = bytes(cmd, "utf-8")
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
