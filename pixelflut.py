@@ -96,16 +96,27 @@ class PixelClient:
         self.port = port
 
     def px(self, x, y, on_off):
-        self. client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client.connect((self.ip, self.port))
         cmd = "PX {x} {y} {on_off}".format(x=x, y=y, on_off=on_off)
         cmd = bytes(cmd, "utf-8")
-        self.client.send(cmd)
-        self.client.close()
+        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client.connect((self.ip, self.port))
+        client.send(cmd)
+        client.close()
 
 
-if __name__ == "__main__":
-    import argparse
+def __run_client(ip, port):
+    print("Connecting to {ip}:{po}.".format(ip=ip, po=port))
+    user_input = ""
+    cl = PixelClient(ip=ip, port=port)
+    while user_input != "n":
+        x = int(input("x="))
+        y = int(input("y="))
+        on_off = int(input("on_off (1,0)="))
+        cl.px(x, y, on_off)
+        user_input = input("Again? (y/n)")
+
+
+def __main():
     d = """
         Pixelflut - A Server, that listens for TCP packets that allow for
         drawing on the screen. Valid content of the packets is \"PX x y on_off\"
@@ -129,15 +140,12 @@ if __name__ == "__main__":
                         dest="port", default=1234)
     args = parser.parse_args()
     if args.client:
-        print("Connecting to {ip}:{po}.".format(ip=args.ip, po=args.port))
-        user_input = ""
-        cl = PixelClient(ip=args.ip, port=args.port)
-        while user_input != "n":
-            x = int(input("x="))
-            y = int(input("y="))
-            on_off = int(input("on_off (1,0)="))
-            cl.px(x, y, on_off)
-            user_input = input("Again? (y/n)")
+        __run_client(args.ip, args.port)
 
     elif args.server:
         Pixelflut(ip=args.ip, port=args.port)
+
+
+if __name__ == "__main__":
+    import argparse
+    __main()
