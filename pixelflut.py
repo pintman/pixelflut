@@ -2,13 +2,13 @@
 Göttingen (https://cccgoe.de/wiki/Pixelflut). It uses the core python
 libraries and will not rely on other libraries.
 
-There is a server and a client component in this package. The server listens for packages
-with commands as content. The following commands are recognized:
+There is a server and a client component in this package. The server listens
+for packets with commands as content. The following commands are recognized:
 
-SIZE - will respond with the actual size of the screen in the format WIDTHxHEIGHT
+SIZE - will respond with the actual size of the screen in the format
+WIDTHxHEIGHT
 
 PX x y on_off - will draw (on_off=1) or clear (on_off=0) the pixel at (x|y).
-
 """
 
 import tkinter
@@ -53,7 +53,7 @@ class Pixelflut:
         # TODO Support for colors
         if (x, y) not in self.coord2rectangle:
             r = self.canvas.create_rectangle(x, y, x+1, y+1, fill="black")
-            self.coord2rectangle[(x,y)] = r
+            self.coord2rectangle[(x, y)] = r
 
     def clear_pixel(self, x, y):
         """Remove the pixel at (x|y) from the screen."""
@@ -79,8 +79,8 @@ class PixelServer:
         while True:
             sock, _address = self.server.accept()
             # TODO only call handle if window is visible - call for window state
-            #th = threading.Thread(target=self.__handle, args=(sock,))
-            #th.start()
+            # th = threading.Thread(target=self.__handle, args=(sock,))
+            # th.start()
             self.__handle(sock)
 
     def __handle(self, client_sock):
@@ -142,7 +142,8 @@ def __main():
         A pixel will be drawn there if on_off is 1 - otherwise it will be
         cleared. When
         the packet contains \"SIZE\" you will receive the size of the screen
-        in the format WIDTHxHEIGHT. There is a simple client that can be used as well.
+        in the format WIDTHxHEIGHT. There is a simple client that can be used
+        as well.
         """
     parser = argparse.ArgumentParser(description=d)
     parser.add_argument("-s", "--server", action="store_const", const=True,
