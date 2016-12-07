@@ -31,9 +31,9 @@ class Pixelflut:
 
         self.canvas = tkinter.Canvas(fenster, background="white")
         self.canvas.pack(fill=tkinter.BOTH, expand=1)
-
         self.__init_canvas()
 
+        # start pixel server in separate thread
         th = threading.Thread(target=self.__run_pixel_server)
         th.start()
 
