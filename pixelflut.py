@@ -137,13 +137,11 @@ def __main():
     d = """
         Pixelflut - A Server, that listens for TCP packets that allow for
         drawing on the screen. Valid content of the packets is \"PX x y on_off\"
-        where x and
-        y are coordinates on the screen and on_off is either 1 or 0.
+        where x and y are coordinates on the screen and on_off is either 1 or 0.
         A pixel will be drawn there if on_off is 1 - otherwise it will be
-        cleared. When
-        the packet contains \"SIZE\" you will receive the size of the screen
-        in the format WIDTHxHEIGHT. There is a simple client that can be used
-        as well.
+        cleared. If the packet contains \"SIZE\" you will receive the size of
+        the screen in the format WIDTHxHEIGHT.
+        There is a simple client that can be used as well.
         """
     parser = argparse.ArgumentParser(description=d)
     parser.add_argument("-s", "--server", action="store_const", const=True,
@@ -151,11 +149,12 @@ def __main():
     parser.add_argument("-c", "--client", action="store_const", const=True,
                         help="Start client.")
     parser.add_argument("-i", "--ip",
-                        help="An IP address the client or server should be bound to.",
+                        help="An IP address or hostname the client or server "
+                             "should be bound to.",
                         dest="ip", default="127.0.0.1")
     parser.add_argument("-p", "--port",
-                        help="The port number to listen or to connect to.", type=int,
-                        dest="port", default=1234)
+                        help="The port number to listen or to connect to.",
+                        type=int, dest="port", default=1234)
     args = parser.parse_args()
     if args.client:
         __run_client(args.ip, args.port)
