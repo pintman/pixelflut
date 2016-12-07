@@ -51,8 +51,9 @@ class Pixelflut:
     def draw_pixel(self, x, y):
         """Draw a black pixel at (x|y)."""
         # TODO Support for colors
-        r = self.canvas.create_rectangle(x, y, x+1, y+1, fill="black")
-        self.coord2rectangle[(x,y)] = r
+        if (x, y) not in self.coord2rectangle:
+            r = self.canvas.create_rectangle(x, y, x+1, y+1, fill="black")
+            self.coord2rectangle[(x,y)] = r
 
     def clear_pixel(self, x, y):
         """Remove the pixel at (x|y) from the screen."""
