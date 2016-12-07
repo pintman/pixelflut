@@ -79,6 +79,8 @@ class PixelServer:
         while True:
             sock, _address = self.server.accept()
             # TODO only call handle if window is visible - call for window state
+            #th = threading.Thread(target=self.__handle, args=(sock,))
+            #th.start()
             self.__handle(sock)
 
     def __handle(self, client_sock):
