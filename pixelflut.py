@@ -17,7 +17,7 @@ import threading
 
 
 class Pixelflut:
-    """A canvas that shows the screen which can be used by clients to print or clear 
+    """A canvas that shows the screen which can be used by clients to print or clear
     pixels on.
     """
 
@@ -33,7 +33,7 @@ class Pixelflut:
         self.canvas.pack(fill=tkinter.BOTH, expand=1)
         self.__init_canvas()
 
-        # start pixel server in separate thread
+        # start pixel server in a separate thread
         th = threading.Thread(target=self.__run_pixel_server)
         th.start()
 
